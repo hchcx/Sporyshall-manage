@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>综合性运动场馆的信息化管理系统</title>
+    <link rel="stylesheet" href="/js/layui/css/layui.css">
+    <style type="text/css">
+        .layui-this > nav {
+            background-color: #f581a4 !important;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-hide-xs layui-bg-black">运动场馆的信息化管理系统</div>
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
+                <i class="layui-icon layui-icon-spread-left"></i>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide layui-show-md-inline-block" style="margin-right: 50px">
+                <a href="javascript:;" id="username" style="margin-right: 20px;font-size: 18px" ></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:void(0)" id="logout">注销</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test" id="menutree">
+                <li class="layui-nav-item layui-nav-itemed" id="menu1">
+                    <a href="javascript:void(0)"><span></span></a>
+                    <dl class="layui-nav-child" id="gym"></dl>
+                </li>
+                <li class="layui-nav-item" id="menu2">
+                    <a href="javascript:void(0)"><span></span></a>
+                    <dl class="layui-nav-child" id="client"></dl>
+                </li>
+                <li class="layui-nav-item" id="menu3">
+                    <a href="javascript:void(0)"><span></span></a>
+                    <dl class="layui-nav-child" id="spend"></dl>
+                </li>
+                <li class="layui-nav-item" id="menu4">
+                    <a href="javascript:void(0)"><span></span></a>
+                    <dl class="layui-nav-child" id="sys"></dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <div class="layui-tab" lay-allowClose="true" lay-filter="tabs">
+                <ul class="layui-tab-title" id="tabs-bar">
+                </ul>
+                <div class="layui-tab-content" id="tabs-content">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script src="/js/layui/layui.js"></script>
+<script src="/js/sys/index.js"></script>
+</body>
+</html>

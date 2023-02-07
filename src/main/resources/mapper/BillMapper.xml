@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gymmanage.bill.dao.BillMapper" >
+    <insert id="billAdd">
+        insert into shop_bill
+        (coach_id, coach_time, object_id,object_num,place_id,place_time) values
+        (#{coach_id},#{coach_time},#{object_id},#{object_num},#{place_id},#{place_time})
+    </insert>
+    <update id="billUpdate">
+        update shop_bill
+        set
+        coach_id = #{coach_id},
+        coach_time = #{coach_time},
+        object_id = #{object_id},
+        object_num = #{object_num},
+        place_id = #{place_id},
+        place_time = #{place_time},
+        where id = #{id}
+    </update>
+    <delete id="billDel">
+         delete from shop_bill where id = #{id}
+    </delete>
+    <select id="selectAll" resultType="com.gymmanage.bill.entity.Bill">
+           select s.id,s.creat_time,p.name as place_name, b.name as username  from shop_bill s
+           left join gym_place p on s.place_id = p.id
+           left join gym_book b on s.id = b.id
+           where s.is_pay = #{pay}
+    </select>
+    <select id="getOne" resultType="com.gymmanage.bill.entity.Bill">
+        select s.*,p.name as place_name from shop_bill s
+        left join gym_place p on s.place_id = p.id
+        where id = #{id} and is_pay = 0
+    </select>
+    <select id="getBillItem" resultType="com.gymmanage.bill.entity.BillItem">
+        select t.* from shop_bill s
+        left join shop_bill_type t on t.bill_id = s.id
+        where s.place_id = #{placeId} and is_pay = 0
+    </select>
+    <select id="getBillItem2" resultType="com.gymmanage.bill.entity.BillItem">
+        select t.* from shop_bill s
+        left join shop_bill_type t on t.bill_id = s.id
+        where s.id = #{id}
+    </select>
+    <select id="getOneByPlaceId" resultType="com.gymmanage.bill.entity.Bill">
+        select s.*,p.name as place_name,p.price as place_price from shop_bill s
+        left join gym_place p on s.place_id = p.id
+        where place_id = #{placeId} and is_pay = 0
+    </select>
+    <select id="getOneById" resultType="com.gymmanage.bill.entity.Bill">
+        select s.*,p.name as place_name,p.price as place_price from shop_bill s
+        left join gym_place p on s.place_id = p.id
+        where s.id = #{id}
+    </select>
+    <select id="getObj" resultType="com.gymmanage.shop.entity.ShopObject">
+        select * from shop_object where id = #{id}
+    </select>
+    <select id="getCoach" resultType="com.gymmanage.gym.entity.Coach">
+        select * from shop_coach where id = #{id}
+    </select>
+
+</mapper>

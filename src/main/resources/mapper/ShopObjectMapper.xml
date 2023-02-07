@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gymmanage.shop.dao.ShopObjectMapper" >
+    <insert id="shopObjectAdd">
+        insert into shop_object (`name`, price, `desc`, num) values (#{name},#{price},#{desc},#{num})
+    </insert>
+    <insert id="addToBill">
+        insert into shop_bill_type (`bill_id`,`type`,`id`,num) values (#{billId},'obj',#{id},#{num})
+    </insert>
+    <update id="shopObjectUpdate">
+        update shop_object
+        set
+        `name` = #{name},
+        price = #{price},
+        `desc` = #{desc},
+        num = #{num}
+        where id = #{id}
+    </update>
+    <update id="decreaseNum">
+        update shop_object
+        set num = CONCAT(num-${num})
+        where id = #{id}
+    </update>
+    <delete id="shopObjectDel">
+         delete from shop_object where id = #{id}
+    </delete>
+    <select id="selectAll" resultType="com.gymmanage.shop.entity.ShopObject">
+        select * from shop_object
+    </select>
+    <select id="getOne" resultType="com.gymmanage.shop.entity.ShopObject">
+        select * from shop_object where id = #{id}
+    </select>
+    <select id="getBillIdByPlace" resultType="java.lang.Integer">
+        select IFNULL(MAX(id),0) from shop_bill
+        where place_id = #{place} and is_pay=0
+    </select>
+</mapper>
+
+

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gymmanage.gym.dao.PlaceMapper" >
+  <resultMap id="BaseResultMap" type="com.gymmanage.gym.entity.Place" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="kind_id" property="kindId" jdbcType="INTEGER" />
+    <result column="kindName" property="kindName" jdbcType="INTEGER" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="kindAdd">
+    insert into gym_place_kind (name) values (#{kind})
+  </insert>
+  <insert id="kindAddManager">
+    insert into sys_role (name,place,is_admin,kind) values (#{kind},0,1,#{kindId})
+  </insert>
+  <insert id="placeAdd">
+    insert into gym_place (name,kind_id,size,price) values (#{name},#{kindId},#{size},#{price})
+  </insert>
+  <insert id="createBill">
+    insert into shop_bill (place_id,place_time,creat_time) values (#{placeId},1,#{time})
+  </insert>
+  <update id="kindAddUserRole">
+    update sys_user set role = #{role} where id = #{kindManager}
+  </update>
+  <update id="placeUpdate">
+    update gym_place set
+    name = #{name},
+    kind_id = #{kindId},
+    size = #{size},
+    price = #{price}
+    where id = #{id}
+  </update>
+  <update id="changeState">
+    update gym_place set
+    state = #{state}
+    where id = #{id}
+  </update>
+  <update id="payBill">
+    update shop_bill set
+    is_pay = 1
+    where place_id = #{id}
+  </update>
+  <update id="changeCoachState">
+    update shop_coach set
+    state = 0
+    where id = #{coachId}
+  </update>
+  <select id="getAllPlace" resultType="com.gymmanage.gym.entity.Place">
+    select p.*, u.name as managerName ,p.kind_id as kindId,
+    k.name as kindName from gym_place p
+    left join gym_place_kind k on p.kind_id = k.id
+    left join sys_role r on r.kind = k.id
+    left join sys_user u on r.id = u.role
+    <where>
+      and r.is_admin=1
+      <if test="kindId != null and kindId != ''">
+        and kind_id = #{kindId}
+      </if>
+    </where>
+  </select>
+  <select id="getAllPlaceKind" resultType="com.gymmanage.gym.entity.PlaceKind">
+    select k.id, k.name ,u.name as managerName from gym_place_kind k
+    left join sys_role r on r.kind = k.id
+		left join sys_user u on r.id = u.role
+		where r.is_admin=1
+  </select>
+  <select id="kindMaxId" resultType="java.lang.Integer">
+    select max(id) from gym_place_kind
+  </select>
+  <select id="roleNewId" resultType="java.lang.Integer">
+    select max(id) from sys_role
+  </select>
+  <select id="kindList" resultType="com.gymmanage.gym.entity.PlaceKind">
+    select * from gym_place_kind
+  </select>
+  <select id="getOne" resultType="com.gymmanage.gym.entity.Place">
+    select *, kind_id as kindId from gym_place where id = #{id}
+  </select>
+    <select id="getNextBook" resultType="java.lang.String">
+      select end_time as nextBook from gym_book where place_id = #{placeId}
+      order by end_time desc limit 1
+    </select>
+    <select id="getApply" resultType="java.lang.String">
+      select id from gym_book where place_id = #{id} and is_arrive =0 and is_cancel=0 order by start_time limit 1
+    </select>
+    <select id="getPlaceByState" resultType="com.gymmanage.gym.entity.Place">
+      select * from gym_place where state = #{state}
+    </select>
+  <select id="getBillIdByPlace" resultType="java.lang.Integer">
+    select id from shop_bill where
+    is_pay = 0
+    and place_id = #{id}
+  </select>
+  <select id="getCoachId" resultType="java.lang.Integer">
+    select id from shop_bill_type
+    where bill_id = #{billId} and `type` = 'coach'
+  </select>
+</mapper>

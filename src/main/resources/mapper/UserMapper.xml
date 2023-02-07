@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gymmanage.sys.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.gymmanage.sys.entity.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="id_number" property="idNumber" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="VARCHAR" />
+    <result column="role_time" property="roleTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+    <insert id="addUser">
+      insert into sys_user(`username`, `name`,tel, id_number,pwd,role_time,role)
+        values (#{username},#{name},#{tel}, #{idNumber},#{pwd},#{roleTime},#{role})
+    </insert>
+    <insert id="signIn">
+        insert into gym_client(user_name,tel,pwd)
+        values (#{name},#{phone},#{pwd1})
+    </insert>
+    <update id="updateUser">
+        update sys_user
+        set username = #{username},
+        `name` = #{name},
+        tel = #{tel},
+        id_number = #{idNumber},
+        role_time = #{roleTime},
+        role = #{role}
+        where id = #{id}
+    </update>
+    <update id="passwordUpdate">
+        update sys_user
+        set pwd = #{pwd}
+        where username = #{username}
+    </update>
+    <update id="passwordUpdate2">
+        update gym_client
+        set pwd = #{pwd}
+        where user_name = #{username}
+    </update>
+    <delete id="deleteUser">
+        delete from sys_user
+        where id = #{id}
+    </delete>
+
+    <select id="getPwd" resultType="java.lang.String">
+    select pwd from sys_user where username = #{username}
+  </select>
+    <select id="selectAll" resultType="com.gymmanage.sys.entity.User">
+      select u.id,u.`username`,u.`name`,u.tel,u.id_number as idNumber,u.pwd,u.role_time as roleTime,r.name as role
+      from sys_user u
+      left join sys_role r
+      on u.role = r.id
+    </select>
+    <select id="checkUsername" resultType="java.lang.String">
+        select id from sys_user where username = #{username}
+    </select>
+    <select id="getOne" resultType="com.gymmanage.sys.entity.User">
+        select id,`username`,`name`,tel,id_number as idNumber,pwd,role_time as roleTime,role
+         from sys_user
+         where id = #{id}
+    </select>
+    <select id="checkRole" resultType="java.lang.String">
+        select `name` from sys_user where role = #{roleId}
+        and 1 = (select is_admin from sys_role where id = #{roleId} and place !=0)
+        and id != #{id}
+    </select>
+    <select id="freeUser" resultType="com.gymmanage.sys.entity.User">
+        select * from sys_user
+
+    </select>
+    <select id="getClientPwd" resultType="com.gymmanage.client.entity.Client">
+        select * from gym_client where tel = #{username} or user_name = #{username}
+    </select>
+    <select id="getByPhone" resultType="java.lang.Integer">
+        select count(*) from gym_client where tel = #{phone}
+    </select>
+</mapper>
